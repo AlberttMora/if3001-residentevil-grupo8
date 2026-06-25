@@ -37,34 +37,24 @@ public class JuegoService {
         iniciar();
     }
  
-    
     public String procesarEleccion(int lado) {
-        Puerta puerta = (lado == 0)
-                ? arbol.getIzquierda()
-                : arbol.getDerecha();
- 
-        arbol.avanzar(lado);
- 
+        Puerta puerta = (lado == 0) ? arbol.getIzquierda() : arbol.getDerecha();
+        
         if (puerta == null) return "NADA";
- 
+
+        arbol.avanzar(lado);
         String resultado = puerta.getTipo();
- 
+
         if (TIPO_NOTA.equals(resultado)) {
             Nota nota = puerta.getNota();
-            if (nota != null) {
-                notas.marcarEncontrada(nota.getId());
-            }
+            if (nota != null) notas.marcarEncontrada(nota.getId());
         } else if (TIPO_SLENDER.equals(resultado)) {
             vidas--;
         }
- 
-        if (arbol.esHoja()) {
-            regenerarArbol();
-        }
- 
+
         return resultado;
     }
- 
+    
  
     public int getVidas() {
         return vidas;
@@ -93,11 +83,14 @@ public class JuegoService {
     public Puerta getPuertaDerecha() {
         return arbol.getDerecha();
     }
- 
     
-    private void regenerarArbol() {
+    public void regenerarArbol() {
         colaPendientes = notas.getNotasOcultas();
         arbol.reiniciar();
         arbol.generarArbol(colaPendientes);
+    }
+    
+    public boolean esHoja() {
+        return arbol != null && arbol.esHoja();
     }
 }

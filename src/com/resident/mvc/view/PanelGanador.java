@@ -32,7 +32,7 @@ public class PanelGanador extends JPanel {
 		
 		JLabel label = new JLabel("");
 		label.setIcon(new ImageIcon(PanelGanador.class.getResource("/resources/img/PantallaWinner.fw.png")));
-		label.setBounds(0, 0, 677, 384);
+		label.setBounds(0, 0, 1044, 627);
 		add(label);
 
 	}

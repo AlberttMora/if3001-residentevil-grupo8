@@ -51,20 +51,18 @@ public class ViewPrincipal extends JFrame {
 		imgP_Inicio.setBounds(0, 0, 1172, 543);
 		panel.add(imgP_Inicio);
 	}
+	
 	public JLabel getBtnJugar() {
 		return btnJugar;
 	}
-
 
 	public void setBtnJugar(JLabel btnJugar) {
 		this.btnJugar = btnJugar;
 	}
 
-
 	public JLabel getBtnSalir() {
 		return btnSalir;
 	}
-
 
 	public void setBtnSalir(JLabel btnSalir) {
 		this.btnSalir = btnSalir;

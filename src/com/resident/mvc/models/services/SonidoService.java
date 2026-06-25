@@ -6,11 +6,11 @@ import java.io.IOException;
  
 public class SonidoService {
  
-    private static final String PATH_DENTRO    = "/Sounds/DentroDelJuego.wav";
-    private static final String PATH_SLENDER   = "/Sounds/GritoSlender.wav";
-    private static final String PATH_INICIO    = "/Sounds/PantallaDelnicio.wav";
-    private static final String PATH_FINAL     = "/Sounds/PantallaFinal.wav";
-    private static final String PATH_PUERTA    = "/Sounds/SonidoPuerta.wav";
+	private static final String PATH_DENTRO    = "/resources/sounds/DentroDelJuego.wav";
+	private static final String PATH_SLENDER   = "/resources/sounds/GritoSlender.wav";
+	private static final String PATH_INICIO    = "/resources/sounds/PantallaDeInicio.wav";
+	private static final String PATH_FINAL     = "/resources/sounds/PantallaFinal.wav";
+	private static final String PATH_PUERTA    = "/resources/sounds/SonidoPuerta.wav";
  
     private Clip musicaDentroDelJuego;
     private Clip gritoSlender;

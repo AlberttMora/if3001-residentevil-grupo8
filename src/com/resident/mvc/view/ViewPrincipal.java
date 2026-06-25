@@ -72,4 +72,11 @@ public class ViewPrincipal extends JFrame {
 		this.setVisible(true);
 		this.setLocationRelativeTo(null);
 	}
+	
+	public void mostrarPanel(JPanel panel) {
+	    contentPane.removeAll();
+	    contentPane.add(panel, BorderLayout.CENTER);
+	    contentPane.revalidate();
+	    contentPane.repaint();
+	}
 }

@@ -4,8 +4,6 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import java.awt.GridLayout;
 
 public class PanelJuego extends JPanel {
@@ -109,5 +107,22 @@ public class PanelJuego extends JPanel {
 
 	public void setPnlNotasEncontradas(JPanel pnlNotasEncontradas) {
 		this.pnlNotasEncontradas = pnlNotasEncontradas;
+	}
+	
+	public void habilitarPuertas(boolean habilitar) {
+	    btnPuertaIzq.setEnabled(habilitar);
+	    btnPuertaDer.setEnabled(habilitar);
+	}
+
+	public void mostrarSiguiente(boolean visible) {
+	    btnSiguiente.setVisible(visible);
+	}
+
+	public void setVidas(int vidas) {
+	    // Aquí deberías actualizar un JLabel que muestre las vidas
+	}
+
+	public void setNotas(int encontradas, int total) {
+	    // Aquí deberías actualizar un JLabel o texto que muestre "Notas: x/y"
 	}
 }

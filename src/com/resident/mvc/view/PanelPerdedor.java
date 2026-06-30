@@ -1,51 +1,107 @@
 package com.resident.mvc.view;
 
-import javax.swing.JPanel;
+import com.resident.mvc.assets.Assets;
+
+import javax.swing.JButton;
 import javax.swing.JLabel;
-
-import java.awt.Image;
-
-import javax.swing.ImageIcon;
+import javax.swing.JPanel;
+import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class PanelPerdedor extends JPanel {
 
-	private JLabel lblVolverJugar;
-	private JLabel lblSalir;
-	/**
-	 * Create the panel.
-	 */
+	private JLabel lblFondo;
+	private JLabel lblNiebla;
+	private JLabel lblLogo;
+	private JPanel panelControl;
+	private JButton btnMas;
+	private JButton btnSalir;
+
 	public PanelPerdedor() {
 		setLayout(null);
-		
-		ImageIcon iconOriginal = new ImageIcon(PanelPerdedor.class.getResource("/resources/img/botonVolver_Jugar.fw.png"));
-		Image imagenEscalada = iconOriginal.getImage().getScaledInstance(250, 50, Image.SCALE_SMOOTH);
-		lblVolverJugar = new JLabel("Volver a jugar");
-		lblVolverJugar.setIcon(new ImageIcon(imagenEscalada));
-		lblVolverJugar.setBounds(234, 304, 250, 50);
-		add(lblVolverJugar);
-		
-		ImageIcon iconOriginalSalir = new ImageIcon(PanelPerdedor.class.getResource("/resources/img/botonSalir.fw.png"));
-		Image imagenEscaladaSalir = iconOriginalSalir.getImage().getScaledInstance(150, 45, Image.SCALE_SMOOTH);
-		lblSalir = new JLabel("Salir");
-		lblSalir.setIcon(new ImageIcon(imagenEscaladaSalir));
-		lblSalir.setBounds(494, 307, 150, 45);
-		add(lblSalir);
-		
-		ImageIcon iconFondo = new ImageIcon(PanelPerdedor.class.getResource("/resources/img/PantallaDead.fw.png"));
-		Image imagenFondo = iconFondo.getImage().getScaledInstance(667, 384, Image.SCALE_SMOOTH);
-		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon(imagenFondo));
-		label.setBounds(0, 0, 667, 384);
-		add(label);
+		setBounds(0, 0, 1024, 768);
 
-	}
-	
-	public JLabel getLblVolverJugar() {
-	    return lblVolverJugar;
+		btnSalir = new JButton(Assets.getBtnSalir1());
+		btnSalir.setBounds(900, 30, 83, 50);
+		btnSalir.setOpaque(false);
+		btnSalir.setContentAreaFilled(false);
+		btnSalir.setBorderPainted(false);
+		btnSalir.setFocusPainted(false);
+		btnSalir.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnSalir.setIcon(Assets.getBtnSalir2());
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnSalir.setIcon(Assets.getBtnSalir1());
+			}
+		});
+
+		panelControl = new JPanel();
+		panelControl.setBounds(100, 150, 400, 450);
+		panelControl.setOpaque(false);
+		panelControl.setLayout(new FlowLayout());
+
+		lblLogo = new JLabel(Assets.getTextOver());
+		lblLogo.setBounds(0, 0, 300, 300);
+
+		btnMas = new JButton(Assets.getBtnMore1());
+		btnMas.setBounds(0, 0, 103, 62);
+		btnMas.setOpaque(false);
+		btnMas.setContentAreaFilled(false);
+		btnMas.setBorderPainted(false);
+		btnMas.setFocusPainted(false);
+		btnMas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnMas.setIcon(Assets.getBtnMore2());
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnMas.setIcon(Assets.getBtnMore1());
+			}
+		});
+
+		panelControl.add(lblLogo);
+		panelControl.add(btnMas);
+
+		lblNiebla = new JLabel(Assets.getNiebla());
+		lblNiebla.setBounds(0, 0, 2422, 681);
+
+		lblFondo = new JLabel(Assets.getBgOver());
+		lblFondo.setBounds(0, 0, 1100, 768);
+
+		add(btnSalir);
+		add(panelControl);
+		add(lblNiebla);
+		add(lblFondo);
 	}
 
-	public JLabel getLblSalir() {
-	    return lblSalir;
+	public JLabel getLblFondo() {
+		return lblFondo;
 	}
 
+	public JLabel getLblNiebla() {
+		return lblNiebla;
+	}
+
+	public JLabel getLblLogo() {
+		return lblLogo;
+	}
+
+	public JPanel getPanelControl() {
+		return panelControl;
+	}
+
+	public JButton getBtnMas() {
+		return btnMas;
+	}
+
+	public JButton getBtnSalir() {
+		return btnSalir;
+	}
 }

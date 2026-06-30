@@ -1,35 +1,29 @@
 package com.resident.mvc.models;
 
 public class Nota {
-	private String id;
-	private String imagen;
+
+	private final int numero;
 	private boolean encontrada;
 
-	public Nota() {
-		// TODO Auto-generated constructor stub
+	public Nota(int numero) {
+		this.numero = numero;
+		this.encontrada = false;
 	}
 
-	public Nota(String id, String imagen, boolean encontrada) {
-		this.id = id;
-		this.imagen = imagen;
-		this.encontrada = encontrada;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public String getImagen() {
-		return imagen;
+	public int getNumero() {
+		return numero;
 	}
 
 	public boolean isEncontrada() {
 		return encontrada;
 	}
 
-	public void setEncontrada(boolean v) {
-		this.encontrada = v;
+	public void setEncontrada(boolean encontrada) {
+		this.encontrada = encontrada;
 	}
-	
 
+	@Override
+	public String toString() {
+		return "Nota[" + numero + ", encontrada=" + encontrada + "]";
+	}
 }

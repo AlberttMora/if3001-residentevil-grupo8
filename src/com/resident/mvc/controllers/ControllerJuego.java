@@ -1,207 +1,237 @@
 package com.resident.mvc.controllers;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-
+import com.resident.mvc.assets.Assets;
+import com.resident.mvc.models.ContenidoPuerta;
 import com.resident.mvc.models.Puerta;
 import com.resident.mvc.models.services.AnimacionService;
 import com.resident.mvc.models.services.JuegoService;
 import com.resident.mvc.models.services.SonidoService;
 import com.resident.mvc.view.PanelGanador;
+import com.resident.mvc.view.PanelInicio;
 import com.resident.mvc.view.PanelJuego;
 import com.resident.mvc.view.PanelPerdedor;
 import com.resident.mvc.view.ViewPrincipal;
 
 public class ControllerJuego {
 
-	private static final String TIPO_NOTA = "NOTA";
-	private static final String TIPO_SLENDER = "SLENDER";
+	private final ViewPrincipal vista;
 
-	private ViewPrincipal vp;
-	private PanelJuego panelJuego;
-	private PanelGanador panelGanador;
-	private PanelPerdedor panelPerdedor;
+	private final JuegoService juegoService;
+	private final SonidoService sonidoService;
+	private final AnimacionService animacionService;
 
-	private JuegoService juegoService;
-	private SonidoService sonidoService;
-	private AnimacionService animService;
+	private boolean primeraAnimacion = true;
+	private boolean sonidoJuegoIniciado = true;
+	private boolean bloqueado = false;
 
 	public ControllerJuego() {
-		this.vp = new ViewPrincipal();
-		this.panelJuego = new PanelJuego();
-		this.panelGanador = new PanelGanador();
-		this.panelPerdedor = new PanelPerdedor();
-		this.juegoService = new JuegoService();
-		this.sonidoService = new SonidoService();
-		this.animService = new AnimacionService();
+
+		juegoService = new JuegoService();
+		sonidoService = new SonidoService();
+		animacionService = new AnimacionService();
+
+		vista = new ViewPrincipal();
+
+		setupListeners();
 	}
 
 	public void init() {
-		setupListeners();
-		vp.init();
-		sonidoService.reproducirMusicaInicio();
+
+		vista.init();
+
+		mostrarPantalla("inicio");
 	}
 
 	private void setupListeners() {
 
-		vp.getBtnJugar().addMouseListener(new MouseAdapter() {
+		PanelInicio inicio = vista.getPanelInicio();
+		PanelJuego juego = vista.getPanelJuego();
+		PanelGanador ganador = vista.getPanelGanador();
+		PanelPerdedor perdedor = vista.getPanelPerdedor();
+
+		inicio.getBtnJugar().addActionListener(e -> cargarJuego());
+		inicio.getBtnSalir().addActionListener(e -> System.exit(0));
+		juego.getBtnSalir().addActionListener(e -> System.exit(0));
+		juego.getBtnPuertaIzq().addMouseListener(new MouseAdapter() {
+
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				iniciarJuego();
+			public void mouseEntered(MouseEvent e) {
+				juego.getBtnPuertaIzq().setIcon(Assets.getBtnDoorIzq());
+				sonidoService.reproducirPuerta();
 			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				juego.getBtnPuertaIzq().setIcon(null);
+			}
+
 		});
 
-		vp.getBtnSalir().addMouseListener(new MouseAdapter() {
+		juego.getBtnPuertaDer().addMouseListener(new MouseAdapter() {
+
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				System.exit(0);
+			public void mouseEntered(MouseEvent e) {
+				juego.getBtnPuertaDer().setIcon(Assets.getBtnDoorDer());
+				sonidoService.reproducirPuerta();
 			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				juego.getBtnPuertaDer().setIcon(null);
+			}
+
 		});
 
-		panelJuego.getBtnPuertaIzq().addMouseListener(new MouseAdapter() {
+		juego.getBtnPuertaIzq().addActionListener(new ActionListener() {
+
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (panelJuego.getBtnPuertaIzq().isEnabled()) {
-					procesarEleccion(0);
+			public void actionPerformed(ActionEvent e) {
+
+				if (!bloqueado) {
+					manejarEleccion(0);
 				}
+
 			}
+
 		});
 
-		panelJuego.getBtnPuertaDer().addMouseListener(new MouseAdapter() {
+		juego.getBtnPuertaDer().addActionListener(new ActionListener() {
+
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (panelJuego.getBtnPuertaDer().isEnabled()) {
-					procesarEleccion(1);
+			public void actionPerformed(ActionEvent e) {
+
+				if (!bloqueado) {
+					manejarEleccion(1);
 				}
+
 			}
+
 		});
 
-		panelJuego.getBtnSalir().addMouseListener(new MouseAdapter() {
+		juego.getBtnSiguiente().addActionListener(new ActionListener() {
+
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				System.exit(0);
+			public void actionPerformed(ActionEvent e) {
+
+				if (!bloqueado) {
+					continuarJuego();
+				}
+
 			}
+
 		});
 
-		panelJuego.getBtnSiguiente().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				siguienteRonda();
-			}
-		});
-
-		panelGanador.getLblVolverJugar().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				reiniciarJuego();
-			}
-		});
-
-		panelGanador.getLblSalir().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				System.exit(0);
-			}
-		});
-
-		panelPerdedor.getLblVolverJugar().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				reiniciarJuego();
-			}
-		});
-
-		panelPerdedor.getLblSalir().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				System.exit(0);
-			}
-		});
+		ganador.getBtnMas().addActionListener(e -> cargarJuego());
+		ganador.getBtnSalir().addActionListener(e -> System.exit(0));
+		perdedor.getBtnMas().addActionListener(e -> cargarJuego());
+		perdedor.getBtnSalir().addActionListener(e -> System.exit(0));
 	}
 
-	private void iniciarJuego() {
+	private void cargarJuego() {
 		juegoService.iniciar();
-		actualizarHUD();
-		panelJuego.getPnlNotasEncontradas().removeAll();
-		panelJuego.getPnlNotasEncontradas().revalidate();
-		panelJuego.getPnlNotasEncontradas().repaint();
-		panelJuego.habilitarPuertas(true);
-		panelJuego.mostrarSiguiente(false);
-		vp.mostrarPanel(panelJuego);
-		sonidoService.reproducirMusicaJuego();
+		sonidoJuegoIniciado = true;
+		bloqueado = false;
+		vista.getPanelJuego().ocultarConsecuencia();
+		actualizarHud();
+		mostrarPantalla("juego");
 	}
 
-	private void procesarEleccion(int lado) {
-		panelJuego.habilitarPuertas(false);
-		sonidoService.reproducirPuerta();
+	private void mostrarPantalla(String pantalla) {
+		animacionService.detenerTodo();
 
-		Puerta puertaElegida = (lado == 0) ? juegoService.getPuertaIzquierda() : juegoService.getPuertaDerecha();
-		String resultado = juegoService.procesarEleccion(lado);
+		switch (pantalla.toLowerCase()) {
+		case "inicio":
+			vista.mostrarPanel("inicio");
+			sonidoService.reproducirMusicaInicio();
 
-		if (TIPO_SLENDER.equals(resultado)) {
+			animacionService.iniciarScrollNiebla(vista.getPanelInicio().getLblNiebla(), vista.getPanelInicio(), true,
+					20);
+			animacionService.iniciarScrollBg(vista.getPanelInicio().getLblFondo(), vista.getPanelInicio(), false, 50);
+
+			if (primeraAnimacion) {
+				animacionService.iniciarExpansion(vista.getPanelInicio(),
+						vista.getPanelInicio().getBtnJugar());
+				primeraAnimacion = false;
+			}
+			break;
+
+		case "juego":
+			vista.mostrarPanel("juego");
+			if (sonidoJuegoIniciado) {
+				sonidoService.reproducirMusicaJuego();
+				sonidoJuegoIniciado = false;
+			}
+			break;
+
+		case "ganador":
+			vista.mostrarPanel("ganador");
+			sonidoService.reproducirMusicaFinal();
+			animacionService.iniciarScrollNiebla(vista.getPanelGanador().getLblNiebla(), vista.getPanelGanador(), true,
+					20);
+			animacionService.iniciarScrollBg(vista.getPanelGanador().getLblFondo(), vista.getPanelGanador(), false, 50);
+			break;
+
+		case "perdedor":
+			vista.mostrarPanel("perdedor");
+			sonidoService.reproducirMusicaFinal();
+			animacionService.iniciarGameOver(vista.getPanelPerdedor().getLblFondo());
+			break;
+		}
+	}
+
+	private void manejarEleccion(int lado) {
+		bloqueado = true;
+		PanelJuego panel = vista.getPanelJuego();
+		String ladoTexto = (lado == 0) ? "izq" : "der";
+
+		Puerta puerta = (lado == 0) ? juegoService.getPuertaIzquierda() : juegoService.getPuertaDerecha();
+		ContenidoPuerta resultado = juegoService.procesarEleccion(lado);
+
+		switch (resultado) {
+		case NOTA:
+			int numeroNota = puerta.getNota().getNumero();
+			panel.mostrarNotaEnPuerta(ladoTexto, numeroNota);
+			break;
+
+		case SLENDERMAN:
+			panel.mostrarSlenderEnPuerta(ladoTexto);
 			sonidoService.reproducirGritoSlender();
-		} else if (TIPO_NOTA.equals(resultado) && puertaElegida != null && puertaElegida.getNota() != null) {
-			JLabel imgNota = new JLabel();
-			imgNota.setIcon(new ImageIcon(PanelJuego.class.getResource(puertaElegida.getNota().getImagen())));
-			panelJuego.getPnlNotasEncontradas().add(imgNota);
-			panelJuego.getPnlNotasEncontradas().revalidate();
-			panelJuego.getPnlNotasEncontradas().repaint();
+			break;
+
+		case NADA:
+			break;
 		}
 
-		actualizarHUD();
+		panel.mostrarConsecuencia(ladoTexto);
+		actualizarHud();
 
 		if (juegoService.haGanado()) {
-			mostrarFinal("GANADOR");
+			mostrarPantalla("ganador");
 			return;
 		}
 
 		if (juegoService.haPerdido()) {
-			mostrarFinal("PERDEDOR");
+			mostrarPantalla("perdedor");
 			return;
 		}
 
-		panelJuego.mostrarSiguiente(true);
+		bloqueado = false;
 	}
 
-	private void siguienteRonda() {
-	    
-	    if (juegoService.esHoja()) {
-	        juegoService.regenerarArbol();
-	    }
-	    
-	    panelJuego.mostrarSiguiente(false);
-	    panelJuego.habilitarPuertas(true);
+	private void continuarJuego() {
+		vista.getPanelJuego().ocultarConsecuencia();
+		mostrarPantalla("juego");
 	}
 
-	private void mostrarFinal(String modo) {
-		sonidoService.reproducirMusicaFinal();
-
-		if ("GANADOR".equals(modo)) {
-			vp.mostrarPanel(panelGanador);
-		} else {
-			vp.mostrarPanel(panelPerdedor);
-			animService.iniciarGameOver(panelPerdedor);
-		}
-	}
-
-	private void reiniciarJuego() {
-		animService.detenerTodo();
-		juegoService.reiniciar();
-		actualizarHUD();
-		panelJuego.getPnlNotasEncontradas().removeAll();
-		panelJuego.getPnlNotasEncontradas().revalidate();
-		panelJuego.getPnlNotasEncontradas().repaint();
-		panelJuego.habilitarPuertas(true);
-		panelJuego.mostrarSiguiente(false);
-		vp.mostrarPanel(panelJuego);
-		sonidoService.reproducirMusicaJuego();
-	}
-
-	private void actualizarHUD() {
-		panelJuego.setVidas(juegoService.getVidas());
-		panelJuego.setNotas(juegoService.getNotasEncontradas(), juegoService.getTotalNotas());
+	private void actualizarHud() {
+		PanelJuego panel = vista.getPanelJuego();
+		panel.setVidasTexto(String.valueOf(juegoService.getVidas()));
+		panel.setNotasTexto(juegoService.getNotasEncontradas() + "/" + juegoService.getTotalNotas());
+		panel.setNotasEncontradas(juegoService.getNumerosNotasEncontradas());
 	}
 }

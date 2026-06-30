@@ -1,25 +1,22 @@
 package com.resident.mvc.models;
 
 public class Puerta {
-	private String id;
-	private String tipo;
+
+	private final int numero;
+	private final ContenidoPuerta tipo;
 	private Nota nota;
 
-	public Puerta() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public Puerta(String id, String tipo, Nota nota) {
-		this.id = id;
+	public Puerta(int numero, ContenidoPuerta tipo) {
+		this.numero = numero;
 		this.tipo = tipo;
-		this.nota = nota;
+		this.nota = null;
 	}
 
-	public String getId() {
-		return id;
+	public int getNumero() {
+		return numero;
 	}
 
-	public String getTipo() {
+	public ContenidoPuerta getTipo() {
 		return tipo;
 	}
 
@@ -27,9 +24,12 @@ public class Puerta {
 		return nota;
 	}
 
-	public void setNota(Nota n) {
-		this.nota = n;
+	public void setNota(Nota nota) {
+		this.nota = nota;
 	}
-	
 
+	@Override
+	public String toString() {
+		return "Puerta[" + numero + ", " + tipo + "]";
+	}
 }

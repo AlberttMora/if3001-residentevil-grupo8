@@ -1,82 +1,93 @@
 package com.resident.mvc.view;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import java.awt.Dimension;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
+import java.awt.Color;
 
 public class ViewPrincipal extends JFrame {
 
-	private JPanel contentPane;
-	private JLabel btnJugar;
-	private JLabel btnSalir;
+	private JPanel contenedor;
 
-	/**
-	 * Create the frame.
-	 */
+	private PanelInicio panelInicio;
+	private PanelJuego panelJuego;
+	private PanelGanador panelGanador;
+	private PanelPerdedor panelPerdedor;
+
 	public ViewPrincipal() {
-		setMaximumSize(new Dimension(1200, 600));
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1200, 600);
-		contentPane = new JPanel();
-		contentPane.setMaximumSize(new Dimension(1200, 600));
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
+		getContentPane().setBackground(Color.BLACK);
+		setLayout(null);
 
-		JPanel panel = new JPanel();
-		panel.setMaximumSize(new Dimension(1200, 600));
-		contentPane.add(panel, BorderLayout.CENTER);
-		panel.setLayout(null);
+		contenedor = new JPanel(null);
+		contenedor.setBackground(Color.BLACK);
+		contenedor.setBounds(0, 0, 1024, 768);
 
-		btnJugar = new JLabel("");
-		btnJugar.setIcon(new ImageIcon(ViewPrincipal.class.getResource("/resources/img/botonJugar.fw.png")));
-		btnJugar.setBounds(425, 390, 259, 112);
-		panel.add(btnJugar);
+		panelInicio = new PanelInicio();
+		panelJuego = new PanelJuego();
+		panelGanador = new PanelGanador();
+		panelPerdedor = new PanelPerdedor();
 
-		btnSalir = new JLabel("");
-		btnSalir.setIcon(new ImageIcon(ViewPrincipal.class.getResource("/resources/img/botonSalir.fw.png")));
-		btnSalir.setBounds(0, 0, 259, 112);
-		panel.add(btnSalir);
+		panelJuego.setVisible(false);
+		panelGanador.setVisible(false);
+		panelPerdedor.setVisible(false);
 
-		JLabel imgP_Inicio = new JLabel("");
-		imgP_Inicio.setIcon(new ImageIcon(ViewPrincipal.class.getResource("/resources/img/pantallaInicio.fw.png")));
-		imgP_Inicio.setPreferredSize(new Dimension(1200, 600));
-		imgP_Inicio.setBounds(0, 0, 1172, 543);
-		panel.add(imgP_Inicio);
-	}
-	
-	public JLabel getBtnJugar() {
-		return btnJugar;
-	}
+		contenedor.add(panelInicio);
+		contenedor.add(panelJuego);
+		contenedor.add(panelGanador);
+		contenedor.add(panelPerdedor);
 
-	public void setBtnJugar(JLabel btnJugar) {
-		this.btnJugar = btnJugar;
-	}
-
-	public JLabel getBtnSalir() {
-		return btnSalir;
-	}
-
-	public void setBtnSalir(JLabel btnSalir) {
-		this.btnSalir = btnSalir;
+		getContentPane().add(contenedor);
 	}
 
 	public void init() {
-		this.setVisible(true);
-		this.setLocationRelativeTo(null);
+		setLocationRelativeTo(null);
+		setVisible(true);
+		centrarContenedor();
 	}
-	
-	public void mostrarPanel(JPanel panel) {
-	    contentPane.removeAll();
-	    contentPane.add(panel, BorderLayout.CENTER);
-	    contentPane.revalidate();
-	    contentPane.repaint();
+
+	private void centrarContenedor() {
+		int x = (getWidth() - contenedor.getWidth()) / 2;
+		int y = (getHeight() - contenedor.getHeight()) / 2;
+		contenedor.setBounds(x, y, contenedor.getWidth(), contenedor.getHeight());
+	}
+
+	public void mostrarPanel(String nombre) {
+		panelInicio.setVisible(false);
+		panelJuego.setVisible(false);
+		panelGanador.setVisible(false);
+		panelPerdedor.setVisible(false);
+
+		switch (nombre.toLowerCase()) {
+		case "inicio":
+			panelInicio.setVisible(true);
+			break;
+		case "juego":
+			panelJuego.setVisible(true);
+			break;
+		case "ganador":
+			panelGanador.setVisible(true);
+			break;
+		case "perdedor":
+			panelPerdedor.setVisible(true);
+			break;
+		}
+	}
+
+	public PanelInicio getPanelInicio() {
+		return panelInicio;
+	}
+
+	public PanelJuego getPanelJuego() {
+		return panelJuego;
+	}
+
+	public PanelGanador getPanelGanador() {
+		return panelGanador;
+	}
+
+	public PanelPerdedor getPanelPerdedor() {
+		return panelPerdedor;
 	}
 }

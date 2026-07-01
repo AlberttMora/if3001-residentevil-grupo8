@@ -13,7 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class PanelGanador extends JPanel {
-
+//
     private JLabel lblFondo;
     //private JLabel lblNiebla;
     private JLabel lblLogo;

@@ -74,7 +74,7 @@ public class PanelInicio extends JPanel {
 				btnSalir.setIcon(Assets.getBtnSalir1());
 			}
 		});
-
+//
 		add(btnSalir);
 		add(panelControl);
 		//add(lblNiebla);

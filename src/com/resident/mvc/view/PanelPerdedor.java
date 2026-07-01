@@ -47,7 +47,7 @@ public class PanelPerdedor extends JPanel {
 		panelControl = new JPanel();
 		panelControl.setBounds(100, 150, 400, 450);
 		panelControl.setOpaque(false);
-
+//
 		ImageIcon textOverOriginal = Assets.getTextOver();
 		int tow = textOverOriginal.getIconWidth();
 		int toh = textOverOriginal.getIconHeight();

@@ -82,7 +82,7 @@ public class PanelJuego extends JPanel {
 		lblNotaDer = new JLabel();
 		lblNotaDer.setBounds(puertaX_der + 18, puertaY + 135, 150, 105);
 		lblNotaDer.setVisible(false);
-
+//
 		btnPuertaIzq = new JButton();
 		btnPuertaIzq.setBounds(297, 282, 137, 365);
 		btnPuertaIzq.setOpaque(false);

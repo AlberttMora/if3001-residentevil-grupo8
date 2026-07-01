@@ -40,7 +40,7 @@ public class ControllerJuego {
 		setupListeners();
 	}
 
-	public void init() {
+	public void init() {//
 
 		vista.init();
 

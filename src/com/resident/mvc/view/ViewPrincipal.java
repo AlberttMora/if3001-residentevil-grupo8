@@ -12,7 +12,7 @@ public class ViewPrincipal extends JFrame {
 	private PanelJuego panelJuego;
 	private PanelGanador panelGanador;
 	private PanelPerdedor panelPerdedor;
-
+//
 	public ViewPrincipal() {
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setUndecorated(true);

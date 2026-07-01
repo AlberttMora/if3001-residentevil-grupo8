@@ -50,7 +50,7 @@ public class AnimacionService {
 	    final boolean[] enTransicion = { false };
 
 	    timerSecuencia = new Timer(DELAY_SECUENCIA, e -> {
-	    	// Ya se llego al ultimo fond entonces este se queda quieto ahi.
+	    	// Ya se llego al ultimo fond entonces este se queda quieto ahi
 	    	if (indiceActual[0] >= frames.length - 1) {
 	    	    detenerTimer(timerSecuencia);
 	    	    return;

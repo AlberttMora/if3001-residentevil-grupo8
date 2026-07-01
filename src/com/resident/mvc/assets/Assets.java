@@ -1,14 +1,18 @@
 package com.resident.mvc.assets;
 
 import java.net.URL;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.ImageIcon;
 
 
 public class Assets {
 
-	private static final String IMG = "/img/";
-	private static final String SND = "/Sounds/";
+	private static final String IMG = "/resources/img/";
+	private static final String SND = "/resources/sounds/";
+	private static final Map<String, ImageIcon> ICON_CACHE = new ConcurrentHashMap<>();
+	private static final Map<String, URL> SOUND_CACHE = new ConcurrentHashMap<>();
 
 	// Fondos
 	private static final String BG_INICIO = IMG + "bg_inicio.png";
@@ -53,7 +57,7 @@ public class Assets {
 	private static final String SND_SLENDER = SND + "slender.wav";
 	private static final String SND_PUERTA = SND + "door.wav";
 
-	// --- Imágenes ---
+	// --- Imï¿½genes ---
 	public static ImageIcon getBgInicio() {
 		return img(BG_INICIO);
 	}
@@ -163,7 +167,6 @@ public class Assets {
 		return img(IMG + "note." + n + ".png");
 	}
 
-	// --- Sonidos (URL para AudioInputStream en SonidoService) ---
 	public static URL getSndInicio() {
 		return snd(SND_INICIO);
 	}
@@ -185,16 +188,28 @@ public class Assets {
 	}
 
 	private static ImageIcon img(String ruta) {
-		URL url = Assets.class.getResource(ruta);
-		if (url == null)
-			throw new RuntimeException("Recurso no encontrado: " + ruta);
-		return new ImageIcon(url);
+		return ICON_CACHE.computeIfAbsent(ruta, key -> {
+			URL url = resolver(key);
+			if (url == null)
+				throw new RuntimeException("Recurso no encontrado: " + key);
+			return new ImageIcon(url);
+		});
 	}
 
 	private static URL snd(String ruta) {
+		return SOUND_CACHE.computeIfAbsent(ruta, key -> {
+			URL url = resolver(key);
+			if (url == null)
+				throw new RuntimeException("Sonido no encontrado: " + key);
+			return url;
+		});
+	}
+
+	private static URL resolver(String ruta) {
 		URL url = Assets.class.getResource(ruta);
-		if (url == null)
-			throw new RuntimeException("Sonido no encontrado: " + ruta);
+		if (url == null && ruta.startsWith("/resources/")) {
+			url = Assets.class.getResource(ruta.replaceFirst("^/resources", ""));
+		}
 		return url;
 	}
 

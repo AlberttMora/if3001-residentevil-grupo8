@@ -1,51 +1,105 @@
 package com.resident.mvc.models.services;
 
-import javax.swing.JButton;
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import javax.swing.*;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class AnimacionService {
 
-	private static final int DELAY_EXPANSION = 30;
+	private static final int DELAY_SECUENCIA = 25;
 	private static final int DELAY_GAMEOVER = 16;
 	private static final int PASO_GAMEOVER = 20;
 
-	private Timer timerExpansion;
+	private Timer timerSecuencia;
 	private Timer timerScrollBg;
 	private Timer timerScrollNiebla;
 	private Timer timerGameOver;
 
 	/**
-	 * Animación de entrada: expande verticalmente el panel desde el centro. El
-	 * botón recibido se oculta durante la animación y vuelve al terminar.
+	 * Animacion de entrada dinde se expande verticalmente el panel desde el centro
+	 *  El botn recibido se oculta durante la animación y vuelve al terminar.
 	 */
-	public void iniciarExpansion(JPanel panel, JButton boton) {
-		detenerTimer(timerExpansion);
-		boton.setVisible(false);
-		panel.setVisible(false);
+	public void iniciarSecuenciaFondos(JLabel fondo, ImageIcon[] imagenes, int msVisible, int msTransicion) {
+	    detenerTimer(timerSecuencia);
+	    if (imagenes == null || imagenes.length == 0) return;
 
-		final int x = panel.getX();
-		final int w = panel.getWidth();
-		final int alturaFinal = panel.getHeight();
-		final int[] y = { panel.getY() + alturaFinal / 2 };
-		final int[] h = { 0 };
-		final int[] paso = { 0 };
+	    final int w = fondo.getWidth();
+	    final int h = fondo.getHeight();
 
-		timerExpansion = new Timer(DELAY_EXPANSION, e -> {
-			panel.setBounds(x, --y[0], w, h[0] += 2);
-			panel.setVisible(true);
-			if (++paso[0] >= alturaFinal / 2) {
-				timerExpansion.stop();
-				boton.setVisible(true);
-				panel.repaint();
-				panel.revalidate();
-			}
-		});
-		timerExpansion.setInitialDelay(500);
-		timerExpansion.start();
+	    final BufferedImage[] frames = new BufferedImage[imagenes.length];
+	    for (int i = 0; i < imagenes.length; i++) {
+	        frames[i] = ajustarCover(imagenes[i].getImage(), w, h);
+	    }
+
+	    fondo.setIcon(new ImageIcon(frames[0])); // el primero aparece de una vez
+	    if (frames.length == 1)
+	        return;
+
+	    final int pasosEspera = Math.max(1, msVisible / DELAY_SECUENCIA);
+	    final int pasosTransicion = Math.max(1, msTransicion / DELAY_SECUENCIA);
+	    final int[] indiceActual = { 0 };
+	    final int[] pasoEspera = { 0 };
+	    final int[] pasoTransicion = { 0 };
+	    final boolean[] enTransicion = { false };
+
+	    timerSecuencia = new Timer(DELAY_SECUENCIA, e -> {
+	    	// Ya se llego al ultimo fond entonces este se queda quieto ahi.
+	    	if (indiceActual[0] >= frames.length - 1) {
+	    	    detenerTimer(timerSecuencia);
+	    	    return;
+	    	}
+	    	if (!enTransicion[0]) {
+	            if (++pasoEspera[0] >= pasosEspera) {
+	                enTransicion[0] = true;
+	                pasoTransicion[0] = 0;
+	            }
+	            return;
+	        }
+	        pasoTransicion[0]++;
+	        float alpha = Math.min(1f, pasoTransicion[0] / (float) pasosTransicion);
+	        int siguiente = indiceActual[0] + 1;
+
+	        BufferedImage compuesto = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	        Graphics2D g2 = compuesto.createGraphics();
+	        g2.drawImage(frames[indiceActual[0]], 0, 0, null);
+	        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+	        g2.drawImage(frames[siguiente], 0, 0, null);
+	        g2.dispose();
+	        fondo.setIcon(new ImageIcon(compuesto));
+
+	        if (alpha >= 1f) {
+	            indiceActual[0] = siguiente;
+	            enTransicion[0] = false;
+	            pasoEspera[0] = 0;
+	        }
+	    });
+	    timerSecuencia.start();
 	}
+//esto es para austar las imagenes que aun no logro ajustar
+	private BufferedImage ajustarCover(Image img, int w, int h) {
+	    int iw = img.getWidth(null);
+	    int ih = img.getHeight(null);
+	    double escala = Math.max(w / (double) iw, h / (double) ih);
+	    int nw = (int) Math.ceil(iw * escala);
+	    int nh = (int) Math.ceil(ih * escala);
+	    int x = (w - nw) / 2;
+	    int y = (h - nh) / 2;
 
+	    BufferedImage out = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	    Graphics2D g2 = out.createGraphics();
+	    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+	    g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+	    g2.drawImage(img, x, y, nw, nh, null);
+	    g2.dispose();
+	    return out;
+	}
 	/**
 	 * Scroll horizontal continuo del fondo de inicio o victoria. Llama
 	 * detenerScrollBg() antes de iniciar una nueva para evitar acumular timers si
@@ -86,7 +140,7 @@ public class AnimacionService {
 	}
 
 	public void detenerTodo() {
-		detenerTimer(timerExpansion);
+		detenerTimer(timerSecuencia);
 		detenerTimer(timerScrollBg);
 		detenerTimer(timerScrollNiebla);
 		detenerTimer(timerGameOver);

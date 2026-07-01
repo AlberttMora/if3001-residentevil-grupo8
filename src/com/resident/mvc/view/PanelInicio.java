@@ -12,7 +12,7 @@ import java.awt.event.MouseEvent;
 public class PanelInicio extends JPanel {
 
 	private JLabel lblFondo;
-	private JLabel lblNiebla;
+	//private JLabel lblNiebla;
 	private JLabel lblLogo;
 	private JPanel panelControl;
 	private JButton btnJugar;
@@ -51,8 +51,8 @@ public class PanelInicio extends JPanel {
 		panelControl.add(lblLogo);
 		panelControl.add(btnJugar);
 
-		lblNiebla = new JLabel(Assets.getNiebla());
-		lblNiebla.setBounds(0, 0, 2422, 681);
+		//lblNiebla = new JLabel(Assets.getNiebla());
+		//lblNiebla.setBounds(0, 0, 2422, 681);
 
 		lblFondo = new JLabel(Assets.getBgInicio());
 		lblFondo.setBounds(0, 0, 1805, 768);
@@ -77,7 +77,7 @@ public class PanelInicio extends JPanel {
 
 		add(btnSalir);
 		add(panelControl);
-		add(lblNiebla);
+		//add(lblNiebla);
 		add(lblFondo);
 	}
 
@@ -85,9 +85,9 @@ public class PanelInicio extends JPanel {
 		return lblFondo;
 	}
 
-	public JLabel getLblNiebla() {
-		return lblNiebla;
-	}
+	//public JLabel getLblNiebla() {
+		//return lblNiebla;
+	//}
 
 	public JLabel getLblLogo() {
 		return lblLogo;

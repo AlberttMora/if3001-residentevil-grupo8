@@ -10,6 +10,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Dimension;
 
 public class PanelJuego extends JPanel {
 
@@ -31,6 +32,8 @@ public class PanelJuego extends JPanel {
 	public PanelJuego() {
 		setLayout(null);
 		setBounds(0, 0, 1024, 768);
+		setBackground(Color.BLACK);
+		setOpaque(true);
 
 		btnSalir = new JButton(Assets.getBtnSalir1());
 		btnSalir.setBounds(900, 30, 83, 50);
@@ -51,50 +54,59 @@ public class PanelJuego extends JPanel {
 		});
 
 		panelNotas = new JPanel();
-		panelNotas.setBounds(420, 670, 500, 80);
+		panelNotas.setBounds(310, 660, 600, 95);
 		panelNotas.setOpaque(false);
 		panelNotas.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
 
-		lblSlenderIzq = new JLabel(Assets.getSlenderIzq());
-		lblSlenderIzq.setBounds(152, 99, 240, 527);
+		// Posiciones recalibradas para calzar con los pilares y el piso del
+		// pasillo de bg_question.png (puerta izq y der, mismo tamano).
+		final int puertaX_izq = 268;
+		final int puertaX_der = 568;
+		final int puertaY = 255;
+		final int puertaW = 185;
+		final int puertaH = 375;
+		
+		lblSlenderIzq = new JLabel(Assets.getSpecimenIzq());
+		lblSlenderIzq.setBounds(297, 282, 140, 361);
 		lblSlenderIzq.setVisible(false);
 
-		lblSlenderDer = new JLabel(Assets.getSlenderDer());
-		lblSlenderDer.setBounds(608, 99, 240, 527);
+		lblSlenderDer = new JLabel(Assets.getSpecimenDer());
+		lblSlenderDer.setPreferredSize(new Dimension(243, 527));
+		lblSlenderDer.setBounds(613, 286, 133, 361);
 		lblSlenderDer.setVisible(false);
 
 		lblNotaIzq = new JLabel();
-		lblNotaIzq.setBounds(227, 230, 100, 161);
+		lblNotaIzq.setBounds(287, 390, 150, 105);
 		lblNotaIzq.setVisible(false);
 
 		lblNotaDer = new JLabel();
-		lblNotaDer.setBounds(673, 230, 100, 161);
+		lblNotaDer.setBounds(puertaX_der + 18, puertaY + 135, 150, 105);
 		lblNotaDer.setVisible(false);
 
 		btnPuertaIzq = new JButton();
-		btnPuertaIzq.setBounds(152, 99, 240, 527);
+		btnPuertaIzq.setBounds(297, 282, 137, 365);
 		btnPuertaIzq.setOpaque(false);
 		btnPuertaIzq.setContentAreaFilled(false);
 		btnPuertaIzq.setBorderPainted(false);
 		btnPuertaIzq.setFocusPainted(false);
 
 		btnPuertaDer = new JButton();
-		btnPuertaDer.setBounds(608, 99, 240, 527);
+		btnPuertaDer.setBounds(603, 286, 143, 357);
 		btnPuertaDer.setOpaque(false);
 		btnPuertaDer.setContentAreaFilled(false);
 		btnPuertaDer.setBorderPainted(false);
 		btnPuertaDer.setFocusPainted(false);
 
 		lblPuertaIzqCerrada = new JLabel(Assets.getImgDoorIzq());
-		lblPuertaIzqCerrada.setBounds(152, 99, 240, 527);
+		lblPuertaIzqCerrada.setBounds(287, 276, 150, 375);
 		lblPuertaIzqCerrada.setVisible(false);
 
 		lblPuertaDerCerrada = new JLabel(Assets.getImgDoorDer());
-		lblPuertaDerCerrada.setBounds(608, 99, 240, 527);
+		lblPuertaDerCerrada.setBounds(603, 283, 140, 365);
 		lblPuertaDerCerrada.setVisible(false);
 
 		btnSiguiente = new JButton(Assets.getBtnNext1());
-		btnSiguiente.setBounds(450, 450, 103, 62);
+		btnSiguiente.setBounds(465, 390, 103, 62);
 		btnSiguiente.setOpaque(false);
 		btnSiguiente.setContentAreaFilled(false);
 		btnSiguiente.setBorderPainted(false);
@@ -172,8 +184,7 @@ public class PanelJuego extends JPanel {
 	public void setNotasEncontradas(int[] numerosNotas) {
 		panelNotas.removeAll();
 		for (int numero : numerosNotas) {
-			JLabel lbl = new JLabel(new javax.swing.ImageIcon(
-					Assets.getNote(numero).getImage().getScaledInstance(50, 80, java.awt.Image.SCALE_SMOOTH)));
+			JLabel lbl = new JLabel(escalarNota(Assets.getNote(numero), 90, 63));
 			panelNotas.add(lbl);
 		}
 		panelNotas.repaint();
@@ -182,12 +193,22 @@ public class PanelJuego extends JPanel {
 
 	public void mostrarNotaEnPuerta(String lado, int numero) {
 		if (lado.equalsIgnoreCase("izq")) {
-			lblNotaIzq.setIcon(Assets.getNote(numero));
+			lblNotaIzq.setIcon(escalarNota(Assets.getNote(numero), lblNotaIzq.getWidth(), lblNotaIzq.getHeight()));
 			lblNotaIzq.setVisible(true);
 		} else {
-			lblNotaDer.setIcon(Assets.getNote(numero));
+			lblNotaDer.setIcon(escalarNota(Assets.getNote(numero), lblNotaDer.getWidth(), lblNotaDer.getHeight()));
 			lblNotaDer.setVisible(true);
 		}
+	}
+
+	private javax.swing.ImageIcon escalarNota(javax.swing.ImageIcon original, int w, int h) {
+		java.awt.Image img = original.getImage();
+		int iw = original.getIconWidth();
+		int ih = original.getIconHeight();
+		double escala = Math.min(w / (double) iw, h / (double) ih);
+		int nw = (int) Math.round(iw * escala);
+		int nh = (int) Math.round(ih * escala);
+		return new javax.swing.ImageIcon(img.getScaledInstance(nw, nh, java.awt.Image.SCALE_SMOOTH));
 	}
 
 	public void mostrarSlenderEnPuerta(String lado) {

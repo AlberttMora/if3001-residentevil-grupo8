@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
+import javax.swing.*;
 import com.resident.mvc.assets.Assets;
 import com.resident.mvc.models.ContenidoPuerta;
 import com.resident.mvc.models.Puerta;
@@ -25,7 +25,7 @@ public class ControllerJuego {
 	private final SonidoService sonidoService;
 	private final AnimacionService animacionService;
 
-	private boolean primeraAnimacion = true;
+	//private boolean primeraAnimacion = true;
 	private boolean sonidoJuegoIniciado = true;
 	private boolean bloqueado = false;
 
@@ -146,19 +146,11 @@ public class ControllerJuego {
 
 		switch (pantalla.toLowerCase()) {
 		case "inicio":
-			vista.mostrarPanel("inicio");
-			sonidoService.reproducirMusicaInicio();
-
-			animacionService.iniciarScrollNiebla(vista.getPanelInicio().getLblNiebla(), vista.getPanelInicio(), true,
-					20);
-			animacionService.iniciarScrollBg(vista.getPanelInicio().getLblFondo(), vista.getPanelInicio(), false, 50);
-
-			if (primeraAnimacion) {
-				animacionService.iniciarExpansion(vista.getPanelInicio(),
-						vista.getPanelInicio().getBtnJugar());
-				primeraAnimacion = false;
-			}
-			break;
+		    vista.mostrarPanel("inicio");
+		    sonidoService.reproducirMusicaInicio();
+		    ImageIcon[] secuenciaInicio = { Assets.getBgInicio(), Assets.getBgInicio2(), Assets.getBgInicio3(), Assets.getBgInicio4() };
+		    animacionService.iniciarSecuenciaFondos(vista.getPanelInicio().getLblFondo(), secuenciaInicio, 2200, 1300);
+		    break;
 
 		case "juego":
 			vista.mostrarPanel("juego");
@@ -169,12 +161,9 @@ public class ControllerJuego {
 			break;
 
 		case "ganador":
-			vista.mostrarPanel("ganador");
-			sonidoService.reproducirMusicaFinal();
-			animacionService.iniciarScrollNiebla(vista.getPanelGanador().getLblNiebla(), vista.getPanelGanador(), true,
-					20);
-			animacionService.iniciarScrollBg(vista.getPanelGanador().getLblFondo(), vista.getPanelGanador(), false, 50);
-			break;
+		    vista.mostrarPanel("ganador");
+		    sonidoService.reproducirMusicaFinal();
+		    break;
 
 		case "perdedor":
 			vista.mostrarPanel("perdedor");

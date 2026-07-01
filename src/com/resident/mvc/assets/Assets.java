@@ -1,15 +1,20 @@
 package com.resident.mvc.assets;
 
 import java.net.URL;
+
 import javax.swing.ImageIcon;
+
 
 public class Assets {
 
-	private static final String IMG = "/resources/img/";
-	private static final String SND = "/resources/Sounds/";
+	private static final String IMG = "/img/";
+	private static final String SND = "/Sounds/";
 
 	// Fondos
 	private static final String BG_INICIO = IMG + "bg_inicio.png";
+	private static final String BG_INICIO_2 = IMG + "bg_segundo_inicio.png";
+	private static final String BG_INICIO_3 = IMG + "bg_tercer_inicio.png";
+	private static final String BG_INICIO_4 = IMG + "bg_cuarto_inicio.png";
 	private static final String BG_QUESTION = IMG + "bg_question.png";
 	private static final String BG_WIN = IMG + "bg_win.png";
 	private static final String BG_OVER = IMG + "bg_over.png";
@@ -38,8 +43,8 @@ public class Assets {
 	private static final String IMG_DOOR_DER = IMG + "img_door_der.png";
 
 	// Slenderman
-	private static final String SLENDER_IZQ = IMG + "slender_izq.png";
-	private static final String SLENDER_DER = IMG + "slender_der.png";
+	private static final String SLENDER_IZQ = IMG + "specimen_izq.png";
+	private static final String SLENDER_DER = IMG + "specimen_der.png";
 
 	// Sonidos
 	private static final String SND_INICIO = SND + "theme.wav";
@@ -51,6 +56,17 @@ public class Assets {
 	// --- Imágenes ---
 	public static ImageIcon getBgInicio() {
 		return img(BG_INICIO);
+	}
+	public static ImageIcon getBgInicio2() {
+	    return img(BG_INICIO_2);
+	}
+
+	public static ImageIcon getBgInicio3() {
+	    return img(BG_INICIO_3);
+	}
+
+	public static ImageIcon getBgInicio4() {
+	    return img(BG_INICIO_4);
 	}
 
 	public static ImageIcon getBgQuestion() {
@@ -133,18 +149,18 @@ public class Assets {
 		return img(IMG_DOOR_DER);
 	}
 
-	public static ImageIcon getSlenderIzq() {
+	public static ImageIcon getSpecimenIzq() {
 		return img(SLENDER_IZQ);
 	}
 
-	public static ImageIcon getSlenderDer() {
+	public static ImageIcon getSpecimenDer() {
 		return img(SLENDER_DER);
 	}
 
 	public static ImageIcon getNote(int n) {
-		if (n < 1 || n > 8)
+		if (n < 1 || n > 6)
 			throw new IllegalArgumentException("Nota invalida: " + n);
-		return img(IMG + "note" + n + ".png");
+		return img(IMG + "note." + n + ".png");
 	}
 
 	// --- Sonidos (URL para AudioInputStream en SonidoService) ---

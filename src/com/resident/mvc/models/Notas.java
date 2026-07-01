@@ -20,7 +20,7 @@ public class Notas {
 	public void inicializar() {
 		mapa.clear();
 		ultimaNotaEncontrada = null;
-		for (int i = 1; i <= 8; i++) {
+		for (int i = 1; i <= 6; i++) {
 			mapa.put(i, new Nota(i));
 		}
 	}
@@ -43,7 +43,7 @@ public class Notas {
 	 */
 	public Queue<Nota> getColaOcultas() {
 		Queue<Nota> cola = new LinkedList<>();
-		for (int i = 1; i <= 8; i++) {
+		for (int i = 1; i <= 6; i++) {
 			Nota n = mapa.get(i);
 			if (n != null && !n.isEncontrada()) {
 				cola.offer(n);
@@ -73,7 +73,7 @@ public class Notas {
 		int[] encontrados = new int[getTotalEncontradas()];
 		int indice = 0;
 
-		for (int i = 1; i <= 8; i++) {
+		for (int i = 1; i <= 6; i++) {
 			Nota nota = mapa.get(i);
 			if (nota != null && nota.isEncontrada()) {
 				encontrados[indice++] = i;

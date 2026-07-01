@@ -2,17 +2,20 @@ package com.resident.mvc.view;
 
 import com.resident.mvc.assets.Assets;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class PanelGanador extends JPanel {
 
     private JLabel lblFondo;
-    private JLabel lblNiebla;
+    //private JLabel lblNiebla;
     private JLabel lblLogo;
     private JPanel panelControl;
     private JButton btnMas;
@@ -21,9 +24,11 @@ public class PanelGanador extends JPanel {
     public PanelGanador() {
         setLayout(null);
         setBounds(0, 0, 1024, 768);
+        setBackground(Color.BLACK);
+        setOpaque(true);
 
         btnSalir = new JButton(Assets.getBtnSalir1());
-        btnSalir.setBounds(900, 30, 83, 50);
+        btnSalir.setBounds(827, 13, 143, 58);
         btnSalir.setOpaque(false);
         btnSalir.setContentAreaFilled(false);
         btnSalir.setBorderPainted(false);
@@ -40,13 +45,20 @@ public class PanelGanador extends JPanel {
             }
         });
 
+        ImageIcon textWinOriginal = Assets.getTextWin();
+        int tww = textWinOriginal.getIconWidth();
+        int twh = textWinOriginal.getIconHeight();
+        double escalaTexto = 900.0 / tww;
+        int twNuevo = (int) Math.round(tww * escalaTexto);
+        int thNuevo = (int) Math.round(twh * escalaTexto);
+        lblLogo = new JLabel(new ImageIcon(
+                textWinOriginal.getImage().getScaledInstance(twNuevo, thNuevo, Image.SCALE_SMOOTH)));
+        lblLogo.setBounds((1024 - twNuevo) / 2, 90, twNuevo, thNuevo);
+
         panelControl = new JPanel();
-        panelControl.setBounds(100, 150, 400, 450);
+        panelControl.setBounds(312, 550, 400, 150);
         panelControl.setOpaque(false);
         panelControl.setLayout(new FlowLayout());
-
-        lblLogo = new JLabel(Assets.getTextWin());
-        lblLogo.setBounds(0, 0, 450, 200);
 
         btnMas = new JButton(Assets.getBtnMore1());
         btnMas.setBounds(0, 0, 103, 62);
@@ -66,23 +78,22 @@ public class PanelGanador extends JPanel {
             }
         });
 
-        panelControl.add(lblLogo);
         panelControl.add(btnMas);
 
-        lblNiebla = new JLabel(Assets.getNiebla());
-        lblNiebla.setBounds(0, 0, 2422, 681);
-
+        //lblNiebla = new JLabel(Assets.getNiebla());
+        //lblNiebla.setBounds(0, 0, 2422, 681);
         lblFondo = new JLabel(Assets.getBgWin());
-        lblFondo.setBounds(0, 0, 1366, 768);
+        lblFondo.setBounds(0, 0, 1024, 768);
 
         add(btnSalir);
+        add(lblLogo);
         add(panelControl);
-        add(lblNiebla);
+        //add(lblNiebla);
         add(lblFondo);
     }
 
     public JLabel getLblFondo()     { return lblFondo; }
-    public JLabel getLblNiebla()    { return lblNiebla; }
+    //public JLabel getLblNiebla()    { return lblNiebla; }
     public JLabel getLblLogo()      { return lblLogo; }
     public JPanel getPanelControl() { return panelControl; }
     public JButton getBtnMas()      { return btnMas; }

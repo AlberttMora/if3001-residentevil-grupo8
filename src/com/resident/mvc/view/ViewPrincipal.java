@@ -1,8 +1,9 @@
 package com.resident.mvc.view;
 
+import java.awt.Color;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.Color;
 
 public class ViewPrincipal extends JFrame {
 

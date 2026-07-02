@@ -44,22 +44,22 @@ public class PanelPerdedor extends JPanel {
 			}
 		});
 
-		panelControl = new JPanel();
-		panelControl.setBounds(100, 150, 400, 450);
+		panelControl = new JPanel(null);
+		panelControl.setBounds(444, 680, 135, 70);
 		panelControl.setOpaque(false);
 //
 		ImageIcon textOverOriginal = Assets.getTextOver();
 		int tow = textOverOriginal.getIconWidth();
 		int toh = textOverOriginal.getIconHeight();
-		double escalaTexto = Math.min(260.0 / tow, 310.0 / toh);
+		double escalaTexto = Math.min(1000.0 / tow, 600.0 / toh);
 		int twNuevo = (int) Math.round(tow * escalaTexto);
 		int thNuevo = (int) Math.round(toh * escalaTexto);
 		lblLogo = new JLabel(new ImageIcon(
 		        textOverOriginal.getImage().getScaledInstance(twNuevo, thNuevo, Image.SCALE_SMOOTH)));
-		lblLogo.setBounds(132, 40, 0, 0);
+		lblLogo.setBounds((1024 - twNuevo) / 2, 80, twNuevo, thNuevo);
 
 		btnMas = new JButton(Assets.getBtnMore1());
-		btnMas.setBounds(-3, 367, 135, 70);
+		btnMas.setBounds(0, 0, 135, 70);
 		btnMas.setOpaque(false);
 		btnMas.setContentAreaFilled(false);
 		btnMas.setBorderPainted(false);
@@ -75,9 +75,6 @@ public class PanelPerdedor extends JPanel {
 				btnMas.setIcon(Assets.getBtnMore1());
 			}
 		});
-		panelControl.setLayout(null);
-
-		panelControl.add(lblLogo);
 		panelControl.add(btnMas);
 
 		//lblNiebla = new JLabel(Assets.getNiebla());
@@ -90,6 +87,7 @@ public class PanelPerdedor extends JPanel {
 		setLayout(null);
 
 		add(btnSalir);
+		add(lblLogo);
 		add(panelControl);
 		//add(lblNiebla);
 		add(lblFondo);

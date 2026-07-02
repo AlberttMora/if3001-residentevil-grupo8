@@ -2,9 +2,11 @@ package com.resident.mvc.controllers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.*;
+
+import com.resident.mvc.animation.AnimacionEntrada;
 import com.resident.mvc.assets.Assets;
 import com.resident.mvc.models.ContenidoPuerta;
 import com.resident.mvc.models.Puerta;
@@ -25,7 +27,7 @@ public class ControllerJuego {
 	private final SonidoService sonidoService;
 	private final AnimacionService animacionService;
 
-	//private boolean primeraAnimacion = true;
+	private boolean primeraAnimacion = true;
 	private boolean sonidoJuegoIniciado = true;
 	private boolean bloqueado = false;
 
@@ -38,9 +40,10 @@ public class ControllerJuego {
 		vista = new ViewPrincipal();
 
 		setupListeners();
+		setupDebugListener();
 	}
 
-	public void init() {//
+	public void init() {
 
 		vista.init();
 
@@ -128,8 +131,18 @@ public class ControllerJuego {
 
 		ganador.getBtnMas().addActionListener(e -> cargarJuego());
 		ganador.getBtnSalir().addActionListener(e -> System.exit(0));
-		perdedor.getBtnMas().addActionListener(e -> cargarJuego());
+		perdedor.getBtnMas().addActionListener(e -> mostrarPantalla("inicio"));
 		perdedor.getBtnSalir().addActionListener(e -> System.exit(0));
+	}
+
+	private void setupDebugListener() {
+		java.awt.KeyboardFocusManager.getCurrentKeyboardFocusManager()
+				.addKeyEventDispatcher(e -> {
+					if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_F8) {
+						mostrarPantalla("ganador");
+					}
+					return false;
+				});
 	}
 
 	private void cargarJuego() {
@@ -146,24 +159,38 @@ public class ControllerJuego {
 
 		switch (pantalla.toLowerCase()) {
 		case "inicio":
-		    vista.mostrarPanel("inicio");
-		    sonidoService.reproducirMusicaInicio();
-		    ImageIcon[] secuenciaInicio = { Assets.getBgInicio(), Assets.getBgInicio2(), Assets.getBgInicio3(), Assets.getBgInicio4() };
-		    animacionService.iniciarSecuenciaFondos(vista.getPanelInicio().getLblFondo(), secuenciaInicio, 2200, 1300);
-		    break;
+			vista.mostrarPanel("inicio");
+			sonidoService.reproducirMusicaInicio();
+			vista.getPanelInicio().getLblFondo().setLocation(-390, vista.getPanelInicio().getLblFondo().getY());
+			animacionService.iniciarScrollBg(vista.getPanelInicio().getLblFondo(), vista.getPanelInicio(), false, 50);
+			break;
 
 		case "juego":
-			vista.mostrarPanel("juego");
-			if (sonidoJuegoIniciado) {
-				sonidoService.reproducirMusicaJuego();
-				sonidoJuegoIniciado = false;
+			if (primeraAnimacion) {
+				primeraAnimacion = false;
+				bloqueado = true;
+				new AnimacionEntrada().iniciar(vista, () -> {
+					vista.mostrarPanel("juego");
+					if (sonidoJuegoIniciado) {
+						sonidoService.reproducirMusicaJuego();
+						sonidoJuegoIniciado = false;
+					}
+					bloqueado = false;
+				});
+			} else {
+				vista.mostrarPanel("juego");
+				if (sonidoJuegoIniciado) {
+					sonidoService.reproducirMusicaJuego();
+					sonidoJuegoIniciado = false;
+				}
 			}
 			break;
 
 		case "ganador":
-		    vista.mostrarPanel("ganador");
-		    sonidoService.reproducirMusicaFinal();
-		    break;
+			vista.mostrarPanel("ganador");
+			sonidoService.reproducirMusicaFinal();
+			animacionService.iniciarScrollBg(vista.getPanelGanador().getLblFondo(), vista.getPanelGanador(), false, 50);
+			break;
 
 		case "perdedor":
 			vista.mostrarPanel("perdedor");
@@ -214,7 +241,6 @@ public class ControllerJuego {
 
 	private void continuarJuego() {
 		vista.getPanelJuego().ocultarConsecuencia();
-		mostrarPantalla("juego");
 	}
 
 	private void actualizarHud() {

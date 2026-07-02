@@ -1,10 +1,5 @@
 package com.resident.mvc.models;
 
-/**
- * Árbol binario de búsqueda de Puerta. Responsabilidad única: estructura de
- * datos pura. La generación aleatoria del contenido es responsabilidad de
- * ArbolGeneratorService.
- */
 public class ArbolBinario {
 
 	private Nodo<Puerta> raiz;
@@ -78,7 +73,7 @@ public class ArbolBinario {
 		return nodoActual.getIzquierdo() == null && nodoActual.getDerecho() == null;
 	}
 
-	/** Reinicia el recorrido desde la raíz. */
+	/** Reinicia el recorrido desde la raÃ¯Â¿Â½z. */
 	public void reiniciar() {
 		nodoActual = raiz;
 	}

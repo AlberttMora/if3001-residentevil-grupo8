@@ -1,13 +1,14 @@
 package com.resident.mvc.view;
 
-import com.resident.mvc.assets.Assets;
+import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.awt.FlowLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+
+import com.resident.mvc.assets.Assets;
 
 public class PanelInicio extends JPanel {
 
@@ -55,7 +56,7 @@ public class PanelInicio extends JPanel {
 		//lblNiebla.setBounds(0, 0, 2422, 681);
 
 		lblFondo = new JLabel(Assets.getBgInicio());
-		lblFondo.setBounds(0, 0, 1805, 768);
+		lblFondo.setBounds(-30, -20, 1880, 800);
 
 		btnSalir = new JButton(Assets.getBtnSalir1());
 		btnSalir.setBounds(900, 30, 83, 50);

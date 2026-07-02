@@ -24,7 +24,7 @@ public class AnimacionService {
 
 	/**
 	 * Animacion de entrada dinde se expande verticalmente el panel desde el centro
-	 *  El botn recibido se oculta durante la animación y vuelve al terminar.
+	 *  El botn recibido se oculta durante la animaciï¿½n y vuelve al terminar.
 	 */
 	public void iniciarSecuenciaFondos(JLabel fondo, ImageIcon[] imagenes, int msVisible, int msTransicion) {
 	    detenerTimer(timerSecuencia);
@@ -112,7 +112,7 @@ public class AnimacionService {
 	}
 
 	/**
-	 * Scroll horizontal continuo de la niebla (imagen más ancha).
+	 * Scroll horizontal continuo de la niebla (imagen mï¿½s ancha).
 	 */
 	public void iniciarScrollNiebla(JLabel fondo, JPanel panel, boolean derecha, int velocidad) {
 		detenerTimer(timerScrollNiebla);
@@ -151,7 +151,8 @@ public class AnimacionService {
 		final int h = fondo.getHeight();
 		final int y = fondo.getY();
 		final int pw = 1024;
-		final int[] x = { derecha ? pw - w : 0 };
+		// Arranca desde la posicion actual del label para poder pre-posicionarlo antes
+		final int[] x = { fondo.getX() };
 		final boolean[] volver = { derecha };
 
 		return new Timer(velocidad, e -> {

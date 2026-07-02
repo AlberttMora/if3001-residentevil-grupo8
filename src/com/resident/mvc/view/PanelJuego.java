@@ -26,6 +26,8 @@ public class PanelJuego extends JPanel {
 	private JPanel panelNotas;
 	private JLabel lblVidas;
 	private JLabel lblNotas;
+	private JLabel lblTituloVidas;
+	private JLabel lblTituloNotas;
 	private JButton btnSiguiente;
 	private JButton btnSalir;
 
@@ -125,14 +127,24 @@ public class PanelJuego extends JPanel {
 		});
 
 		lblNotas = new JLabel("0");
-		lblNotas.setBounds(200, 698, 50, 50);
-		lblNotas.setFont(new Font("Consolas", Font.PLAIN, 35));
+		lblNotas.setBounds(200, 698, 120, 50);
+		lblNotas.setFont(new Font("Consolas", Font.BOLD, 35));
 		lblNotas.setForeground(Color.WHITE);
 
 		lblVidas = new JLabel("0");
 		lblVidas.setBounds(200, 658, 50, 50);
-		lblVidas.setFont(new Font("Consolas", Font.PLAIN, 35));
+		lblVidas.setFont(new Font("Consolas", Font.BOLD, 35));
 		lblVidas.setForeground(Color.WHITE);
+
+		lblTituloVidas = new JLabel("\u2620 Vidas:");
+		lblTituloVidas.setBounds(30, 658, 165, 50);
+		lblTituloVidas.setFont(new Font("Consolas", Font.BOLD, 22));
+		lblTituloVidas.setForeground(Color.WHITE);
+
+		lblTituloNotas = new JLabel("\uD83D\uDCDC Notas:");
+		lblTituloNotas.setBounds(30, 698, 165, 50);
+		lblTituloNotas.setFont(new Font("Consolas", Font.BOLD, 22));
+		lblTituloNotas.setForeground(Color.WHITE);
 
 		lblFondo = new JLabel(Assets.getBgQuestion());
 		lblFondo.setBounds(0, 0, 1024, 768);
@@ -150,6 +162,8 @@ public class PanelJuego extends JPanel {
 		add(btnSiguiente);
 		add(lblNotas);
 		add(lblVidas);
+		add(lblTituloVidas);
+		add(lblTituloNotas);
 		add(lblFondo);
 	}
 
@@ -187,8 +201,10 @@ public class PanelJuego extends JPanel {
 			JLabel lbl = new JLabel(escalarNota(Assets.getNote(numero), 90, 63));
 			panelNotas.add(lbl);
 		}
-		panelNotas.repaint();
 		panelNotas.revalidate();
+		panelNotas.repaint();
+		revalidate();
+		repaint();
 	}
 
 	public void mostrarNotaEnPuerta(String lado, int numero) {
